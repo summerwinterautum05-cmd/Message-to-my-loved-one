@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Message to Heaven</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;font-family:Georgia,serif;background:linear-gradient(#020111,#081a3d,#000)}
+#sky{position:fixed;inset:0;overflow:hidden}
+.starbg{position:absolute;color:#fff8;animation:twinkle 2.5s infinite alternate}
+@keyframes twinkle{from{opacity:.2;transform:scale(.8)}to{opacity:1;transform:scale(1.2)}}
+@keyframes float{50%{transform:translateY(-10px)}}
+@keyframes shoot{0%{transform:translate(-10vw,-10vh)}100%{transform:translate(110vw,110vh);opacity:0}}
+.moon{position:absolute;right:8%;top:8%;width:140px;height:140px;border-radius:50%;background:#fff7d1;box-shadow:0 0 80px #fff9}
+.cloud{position:absolute;width:240px;height:60px;background:#ffffff10;border-radius:60px;filter:blur(10px);animation:cloud 70s linear infinite}
+@keyframes cloud{from{transform:translateX(-300px)}to{transform:translateX(calc(100vw + 300px))}}
+.panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,560px);background:#ffffff12;backdrop-filter:blur(16px);padding:28px;border-radius:24px;color:#fff;text-align:center}
+input{width:100%;padding:16px;border:none;border-radius:30px;font-size:16px}
+button{margin-top:16px;padding:14px 30px;border:none;border-radius:30px;background:linear-gradient(45deg,#ffe38b,#ffc14d);font-weight:bold;cursor:pointer}
+.msg{position:absolute;color:gold;font-size:22px;animation:float 5s ease-in-out infinite;cursor:pointer}
+.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center}
+.card{background:#111c;padding:20px;border-radius:18px;max-width:360px;color:#fff}
+</style></head><body>
+<div id="sky"><div class="moon"></div><div class="cloud" style="top:20%"></div><div class="cloud" style="top:70%;animation-delay:-30s"></div></div>
+<div class="panel"><h1>✨ Message to My Loved One ✨</h1><p>Write from your heart. Every message becomes a star.</p><input id="message" placeholder="Your message..."><button onclick="addStar()">Send to Heaven ⭐</button></div>
+<audio id="bg" autoplay loop><source src="heaven.mp3" type="audio/mpeg"></audio>
+<script>
+const sky=document.getElementById('sky');
+for(let i=0;i<220;i++){let s=document.createElement('div');s.className='starbg';s.textContent='✦';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.fontSize=(4+Math.random()*8)+'px';s.style.animationDelay=Math.random()*3+'s';sky.appendChild(s);}
+setInterval(()=>{let s=document.createElement('div');s.textContent='☄';s.style.position='absolute';s.style.left='-5%';s.style.top=Math.random()*40+'%';s.style.color='white';s.style.animation='shoot 2s linear';sky.appendChild(s);setTimeout(()=>s.remove(),2000)},9000);
+document.body.addEventListener('click',()=>bg.play(),{once:true});
+function arr(){return JSON.parse(localStorage.heavenStars||'[]')}
+function save(a){localStorage.heavenStars=JSON.stringify(a)}
+function draw(d){let e=document.createElement('div');e.className='msg';e.textContent='★';e.style.left=d.x+'%';e.style.top=d.y+'%';e.onclick=()=>{let m=document.createElement('div');m.className='modal';m.innerHTML='<div class="card"><h2>⭐ A Message</h2><p>'+d.m+'</p><small>'+d.t+'</small><br><br><button onclick="this.closest(\'.modal\').remove()">Close</button></div>';document.body.appendChild(m)};sky.appendChild(e)}
+arr().forEach(draw);
+function addStar(){let m=message.value.trim();if(!m)return;let d={m:m,x:5+Math.random()*90,y:15+Math.random()*75,t:new Date().toLocaleString()};let a=arr();a.push(d);save(a);draw(d);message.value='';bg.play();}
+message.onkeydown=e=>{if(e.key==='Enter')addStar();}
+</script></body></html>
